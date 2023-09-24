@@ -1,0 +1,8 @@
+# chache folders
+__pycache__
+
+# env folder
+streamlit-env
+
+# credential file
+.env
