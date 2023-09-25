@@ -2,8 +2,7 @@
 Weather Data dashboard which displays current temperature (C), and other details. Made using openweather API and Streamlit.
 
 ### Notes
-- A Streamlit Weather-Update dashboard which displays current temperature in C, wind speed, and weather condition.
-- Uses weatherapi API to get current weather and 3 days forcast data.
+- Uses weather API API to get current weather and 3-day forecast data.
 - Still in development, so most of the locations are not mentioned.
 
 ## Weather API Token
@@ -11,7 +10,7 @@ Head over to [weatherapi](https://www.weatherapi.com/) site, and create a free a
 
 ## .env file
 Create a **.env** file inside the folder
-Now open the **.env** file, add the **API token** and close the file
+Now open the **.env** file, add the **API token**, and close the file
 ```text
 weather_api = "enter your key"
 ```
