@@ -31,6 +31,8 @@ api_connection = WeatherApi(city)
 data = api_connection.get_current_weather()
 next_3_day_data = api_connection.get_three_days_weather()
 
+st.info('Note, Time displayed is in IST Timezone.')
+
 # Weather details
 st.subheader('Current Weather')
 st.markdown(f"""
