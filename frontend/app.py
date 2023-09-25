@@ -1,5 +1,7 @@
 
 import streamlit as st
+import plotly.graph_objects as go
+from datetime import ( datetime )
 from weather_api import ( WeatherApi )
 
 st.set_page_config(
@@ -27,6 +29,7 @@ city = st.selectbox("Select a City", cities[country])
 # Create WeatherApi object
 api_connection = WeatherApi(city)
 data = api_connection.get_current_weather()
+next_3_day_data = api_connection.get_three_days_weather()
 
 # Weather details
 st.subheader('Current Weather')
@@ -43,7 +46,51 @@ st.markdown(
 )
 
 st.subheader('Next 3 day forcast')
-st.write(api_connection.get_seven_days_weather())
+
+graph, hourly_data = st.tabs(['Graph', 'Hourly Data'])
+
+with graph:
+    # Create traces
+    time_now = datetime.now()
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x = next_3_day_data['date'], 
+            y = next_3_day_data['temp_c'],
+            mode = 'lines',
+            name = 'Hourly Temp (°C)'
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x = next_3_day_data['date'], 
+            y = next_3_day_data['feels_like'],
+            mode = 'lines',
+            name = 'Feels Like (°C)'
+        )
+    )
+
+    # Add current Time line
+    fig.add_vline(
+        x = time_now, 
+        line_color = "green",
+        opacity = 0.4
+    )
+
+    # Update chart layout
+    fig.update_layout(
+        title = "Hourly Weather Forecast",
+        xaxis_title = "Date",
+        yaxis_title = "Temperature °C",
+        hovermode = "x"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+with hourly_data:
+    st.write(next_3_day_data)
 
 # Concluding remarks
 st.write( 'Weather data source: [http://weatherapi.com](https://www.weatherapi.com)' )
