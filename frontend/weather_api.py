@@ -1,4 +1,5 @@
 import os
+import pytz
 import requests
 import pandas as pd
 from datetime import ( datetime )
@@ -34,6 +35,19 @@ class WeatherApi():
             raise ValueError('API key is not available.')
         else:
             return API_KEY
+
+    def convert_gmt_time_to_ist(self, epoch_time):
+        formatted_time = strftime('%Y-%m-%d %H:%M:%S', localtime(epoch_time))
+        # Define the GMT timezone
+        gmt_timezone = pytz.timezone('GMT')
+        # Create a datetime object from the formatted time
+        gmt_datetime = datetime.strptime(formatted_time, '%Y-%m-%d %H:%M:%S')
+        # Set the timezone to IST
+        ist_timezone = pytz.timezone('Asia/Kolkata')
+        ist_datetime = gmt_timezone.localize(gmt_datetime).astimezone(ist_timezone)
+        # Format the IST datetime as a string
+        formatted_ist_time = ist_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        return formatted_ist_time
 
     def get_current_weather(self):
         """
@@ -72,8 +86,7 @@ class WeatherApi():
             for forecast in data:
                 for hour_data in forecast['hour']:
                     weather_data = WeatherData(
-                        # strftime('%Y-%m-%d %H:%M:%S', localtime(hour_data['time_epoch']))
-                        date = strftime('%Y-%m-%d %H:%M:%S', localtime(hour_data['time_epoch'])),
+                        date = self.convert_gmt_time_to_ist(hour_data['time_epoch']),
                         temp_c = hour_data['temp_c'],
                         feels_like = hour_data['feelslike_c'],
                         weather_condition = hour_data['condition']['text'],
