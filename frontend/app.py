@@ -1,4 +1,5 @@
 
+import pytz
 import streamlit as st
 import plotly.graph_objects as go
 from datetime import ( datetime )
@@ -19,7 +20,7 @@ country_set = ['India', 'UK', 'Spain']
 country = st.selectbox("Select a Country", options=country_set)
 
 cities = {
-    "India": ["Mumbai", "New Delhi", "Bangalore", "Indore", "Chennai"],
+    "India": ["Mumbai", "New Delhi", "Bangalore", "Indore", "Chennai", "Kolkata"],
     "UK": ["Liverpool", "Nottingham", "Leicester", "City of London", "Manchester", "Belfast"],
     "Spain": ["Madrid", "Seville", "Valencia", "Barcelona", "Zaragoza"]
 }
@@ -47,18 +48,20 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.subheader('Next 3 day forcast')
+st.subheader('Next 3 day forecast')
 
 graph, hourly_data = st.tabs(['Graph', 'Hourly Data'])
 
 with graph:
     # Create traces
     time_now = datetime.now()
+    IST = pytz.timezone('Asia/Kolkata')
+    ist_time_now = datetime.now(IST)
 
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x = next_3_day_data['date'], 
+            x = next_3_day_data['date'],
             y = next_3_day_data['temp_c'],
             mode = 'lines',
             name = 'Hourly Temp (°C)'
@@ -76,7 +79,7 @@ with graph:
 
     # Add current Time line
     fig.add_vline(
-        x = time_now, 
+        x = ist_time_now,
         line_color = "green",
         opacity = 0.4
     )
